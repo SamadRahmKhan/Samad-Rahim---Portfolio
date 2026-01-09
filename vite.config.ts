@@ -8,6 +8,7 @@ export default defineConfig(({ mode }) => ({
     host: "::",
     port: 8080,
   },
+  base: "/Samad-Rahim---Portfolio/",
   plugins: [react()],
   resolve: {
     alias: {
