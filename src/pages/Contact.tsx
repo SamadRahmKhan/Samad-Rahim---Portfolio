@@ -98,28 +98,50 @@ const Contact = () => {
 
     // Validate first
     const isValid = validateForm();
-    if (!isValid) {
-      return;
-    }
+    if (!isValid) return;
 
-    // Start submission
     setIsSubmitting(true);
+    setSubmitStatus(null);
 
-    // Simulate API call (replace with real API in production)
-    await new Promise((resolve) => setTimeout(resolve, 1500));
+    try {
+      const response = await fetch(
+        "https://samad-rahim-portfolio.vercel.app/api/contact",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(formData),
+        }
+      );
 
-    // Show success message
-    setSubmitStatus("success");
-    setIsSubmitting(false);
+      if (!response.ok) {
+        throw new Error("Failed to send message");
+      }
 
-    // Clear the form
-    setFormData({ name: "", email: "", subject: "", message: "" });
+      // Success
+      setSubmitStatus("success");
 
-    // Hide success message after 5 seconds
-    setTimeout(() => {
-      setSubmitStatus(null);
-    }, 5000);
+      // Clear form
+      setFormData({
+        name: "",
+        email: "",
+        subject: "",
+        message: "",
+      });
+    } catch (error) {
+      console.error(error);
+      setSubmitStatus("error");
+    } finally {
+      setIsSubmitting(false);
+
+      // Hide message after 5 seconds
+      setTimeout(() => {
+        setSubmitStatus(null);
+      }, 5000);
+    }
   };
+
 
   // Handle input changes
   const handleInputChange = (
@@ -177,11 +199,10 @@ const Contact = () => {
                     value={formData.name}
                     onChange={handleInputChange}
                     placeholder="Your name"
-                    className={`w-full px-4 py-3 rounded-lg bg-muted border transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent placeholder:text-muted-foreground ${
-                      errors.name
-                        ? "border-destructive"
-                        : "border-border hover:border-primary/50"
-                    }`}
+                    className={`w-full px-4 py-3 rounded-lg bg-muted border transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent placeholder:text-muted-foreground ${errors.name
+                      ? "border-destructive"
+                      : "border-border hover:border-primary/50"
+                      }`}
                   />
                   {errors.name && (
                     <p className="mt-1 text-sm text-destructive flex items-center gap-1">
@@ -206,11 +227,10 @@ const Contact = () => {
                     value={formData.email}
                     onChange={handleInputChange}
                     placeholder="your@email.com"
-                    className={`w-full px-4 py-3 rounded-lg bg-muted border transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent placeholder:text-muted-foreground ${
-                      errors.email
-                        ? "border-destructive"
-                        : "border-border hover:border-primary/50"
-                    }`}
+                    className={`w-full px-4 py-3 rounded-lg bg-muted border transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent placeholder:text-muted-foreground ${errors.email
+                      ? "border-destructive"
+                      : "border-border hover:border-primary/50"
+                      }`}
                   />
                   {errors.email && (
                     <p className="mt-1 text-sm text-destructive flex items-center gap-1">
@@ -254,11 +274,10 @@ const Contact = () => {
                     onChange={handleInputChange}
                     rows={5}
                     placeholder="Tell me about your project..."
-                    className={`w-full px-4 py-3 rounded-lg bg-muted border transition-all duration-300 resize-none focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent placeholder:text-muted-foreground ${
-                      errors.message
-                        ? "border-destructive"
-                        : "border-border hover:border-primary/50"
-                    }`}
+                    className={`w-full px-4 py-3 rounded-lg bg-muted border transition-all duration-300 resize-none focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent placeholder:text-muted-foreground ${errors.message
+                      ? "border-destructive"
+                      : "border-border hover:border-primary/50"
+                      }`}
                   />
                   {errors.message && (
                     <p className="mt-1 text-sm text-destructive flex items-center gap-1">
