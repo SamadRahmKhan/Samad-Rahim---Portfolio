@@ -5,6 +5,12 @@ let isConnected = false;
 export async function connectDB() {
   if (isConnected) return;
 
-  await mongoose.connect(process.env.MONGO_URI);
-  isConnected = true;
+  try {
+    const db = await mongoose.connect(process.env.MONGO_URI);
+    isConnected = db.connections[0].readyState === 1;
+    console.log("MongoDB connected");
+  } catch (err) {
+    console.error("MongoDB connection error:", err);
+    throw err;
+  }
 }

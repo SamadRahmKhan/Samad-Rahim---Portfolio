@@ -1,8 +1,10 @@
-import { useState } from "react";
+
+import React, { useState, useEffect } from "react";
 import { Star, Quote, Send, CheckCircle } from "lucide-react";
 import { SectionHeader } from "@/components/SectionHeader";
 import { GlassCard } from "@/components/GlassCard";
 import { GlowButton } from "@/components/GlowButton";
+
 
 // Review data type
 interface Review {
@@ -39,36 +41,43 @@ const sampleReviews: Review[] = []
 //   },
 // ];
 
-const Reviews = () => {
-  // Reviews list state
-  const [reviews] = useState<Review[]>(sampleReviews);
-
-  // Form data state
+// Reviews list state
+const Reviews: React.FC = () => {
+  // All state and hooks go INSIDE here
+  const [reviews, setReviews] = useState<Review[]>([]);
   const [formName, setFormName] = useState("");
   const [formEmail, setFormEmail] = useState("");
   const [formMessage, setFormMessage] = useState("");
   const [formRating, setFormRating] = useState(5);
-
-  // Form submission states
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
+
+  // Fetch reviews
+  useEffect(() => {
+    const fetchReviews = async () => {
+      try {
+        const res = await fetch("/api/reviews");
+        const data = await res.json();
+        if (data.success) setReviews(data.data);
+      } catch (err) {
+        console.error("Failed to fetch reviews:", err);
+      }
+    };
+    fetchReviews();
+  }, []);
 
   // Handle form submission
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
 
-    if (!formName.trim() || !formEmail.trim() || !formMessage.trim()) {
-      return;
-    }
+    if (!formName.trim() || !formEmail.trim() || !formMessage.trim()) return;
 
     setIsSubmitting(true);
 
     try {
-      const response = await fetch("https://samad-rahim-portfolio.vercel.app/api/reviews", {
+      const response = await fetch("/api/reviews", {  // note: /api/reviews
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           name: formName,
           email: formEmail,
@@ -77,20 +86,18 @@ const Reviews = () => {
         }),
       });
 
-      if (!response.ok) {
-        throw new Error("Failed to submit review");
+      if (!response.ok) throw new Error("Failed to submit review");
+
+      const data = await response.json();
+      if (data.success) {
+        setReviews([data.data, ...reviews]); // add new review at top
+        setFormName("");
+        setFormEmail("");
+        setFormMessage("");
+        setFormRating(5);
+        setIsSubmitted(true);
+        setTimeout(() => setIsSubmitted(false), 5000);
       }
-
-      setIsSubmitted(true);
-
-      // Clear form
-      setFormName("");
-      setFormEmail("");
-      setFormMessage("");
-      setFormRating(5);
-
-      // Hide success message
-      setTimeout(() => setIsSubmitted(false), 5000);
     } catch (error) {
       console.error("Error submitting review:", error);
     } finally {

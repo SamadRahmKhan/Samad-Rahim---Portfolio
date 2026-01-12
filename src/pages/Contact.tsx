@@ -95,52 +95,30 @@ const Contact = () => {
   // Handle form submission
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
-
-    // Validate first
-    const isValid = validateForm();
-    if (!isValid) return;
-
     setIsSubmitting(true);
-    setSubmitStatus(null);
 
     try {
-      const response = await fetch(
-        "https://samad-rahim-portfolio.vercel.app/api/contact",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(formData),
-        }
-      );
+      const response = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
 
-      if (!response.ok) {
-        throw new Error("Failed to send message");
-      }
+      if (!response.ok) throw new Error("Failed to send message");
 
       // Success
       setSubmitStatus("success");
+      setFormData({ name: "", email: "", subject: "", message: "" });
 
-      // Clear form
-      setFormData({
-        name: "",
-        email: "",
-        subject: "",
-        message: "",
-      });
-    } catch (error) {
-      console.error(error);
+      setTimeout(() => setSubmitStatus(null), 5000);
+    } catch (err) {
+      console.error(err);
       setSubmitStatus("error");
     } finally {
       setIsSubmitting(false);
-
-      // Hide message after 5 seconds
-      setTimeout(() => {
-        setSubmitStatus(null);
-      }, 5000);
     }
   };
+
 
 
   // Handle input changes
