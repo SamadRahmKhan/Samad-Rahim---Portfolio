@@ -56,7 +56,7 @@ const Reviews: React.FC = () => {
   useEffect(() => {
     const fetchReviews = async () => {
       try {
-        const res = await fetch("/api/reviews");
+        const res = await fetch("https://samad-rahim-portfolio.vercel.app/api/review");
         const data = await res.json();
         if (data.success) setReviews(data.data);
       } catch (err) {
