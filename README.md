@@ -12,7 +12,7 @@ The focus of this project is clean UI, smooth animations, and a modern frontend 
 ## Live Demo
 
 🔗 Live Site:  
-()
+(https://samadrahmkhan.github.io/Samad-Rahim-Portfolio/#/)
 
 ---
 
@@ -52,10 +52,10 @@ Make sure you have installed:
 
 ```sh
 # Clone the repository
-git clone <YOUR_GIT_URL>
+git clone <https://samadrahmkhan.github.io/Samad-Rahim-Portfolio/#/>
 
 # Go to project folder
-cd <YOUR_PROJECT_NAME>
+cd <Samad-Rahim-Portfolio>
 
 # Install dependencies
 npm install
