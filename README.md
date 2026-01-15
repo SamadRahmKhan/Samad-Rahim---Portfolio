@@ -64,4 +64,4 @@ npm install
 npm run dev
 
 
-mongodb+srv://portfolioUser:<123portfolioUser321>@cluster0.u2lmj5u.mongodb.net/?appName=Cluster0
+
